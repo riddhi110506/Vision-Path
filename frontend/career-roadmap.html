@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vision Path - Roadmap</title>
+    <link rel="stylesheet" href="career-style.css">
+</head>
+
+<body class="dashboard-body">
+
+<nav class="navbar">
+    <h2>VISION PATH</h2>
+    <div class="nav-right">
+        <button onclick="window.location.href='career-dashboard.html'">
+            Dashboard
+        </button>
+    </div>
+</nav>
+
+<div class="dashboard-container">
+
+    <div class="welcome-card">
+        <h1>Recommended Career Roadmap 🧭</h1>
+        <p>Your roadmap is generated based on your assessment result.</p>
+    </div>
+
+    <!-- Recommended Roadmap -->
+    <div class="roadmap-output">
+
+        <div class="roadmap-summary">
+            <h2 id="roadmapTitle">Recommended Roadmap</h2>
+            <p id="roadmapDuration">Loading your roadmap...</p>
+        </div>
+
+        <div id="roadmapPath" class="roadmap-path"></div>
+
+        <div class="roadmap-info-grid">
+
+            <div class="roadmap-info-card">
+                <h3>Required Skills</h3>
+                <ul id="skillsList"></ul>
+            </div>
+
+            <div class="roadmap-info-card">
+                <h3>Career Roles</h3>
+                <ul id="rolesList"></ul>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Explore Other Domains -->
+    <div class="about-card explore-domain-section">
+
+        <h2>Explore Other Domains</h2>
+        <p>You can also select another domain and generate its roadmap.</p>
+
+        <select id="roadmapDomain">
+            <option value="cyber">Cybersecurity</option>
+            <option value="fullstack">Full Stack Development</option>
+            <option value="quantum">Quantum Computing</option>
+            <option value="ai">Intelligence System</option>
+        </select>
+
+        <button onclick="generateOtherRoadmap()">
+            Generate Selected Roadmap
+        </button>
+
+    </div>
+
+    <!-- Other Domain Roadmap -->
+    <div id="otherRoadmapSection" class="roadmap-output" style="display:none; margin-top:40px;">
+
+        <div class="roadmap-summary">
+            <h2 id="otherRoadmapTitle"></h2>
+            <p id="otherRoadmapDuration"></p>
+        </div>
+
+        <div id="otherRoadmapPath" class="roadmap-path"></div>
+
+        <div class="roadmap-info-grid">
+
+            <div class="roadmap-info-card">
+                <h3>Required Skills</h3>
+                <ul id="otherSkillsList"></ul>
+            </div>
+
+            <div class="roadmap-info-card">
+                <h3>Career Roles</h3>
+                <ul id="otherRolesList"></ul>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="career-script.js"></script>
+<script>
+    loadRecommendedRoadmap();
+</script>
+
+</body>
+</html>

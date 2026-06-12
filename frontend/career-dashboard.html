@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vision Path - Dashboard</title>
+    <link rel="stylesheet" href="career-style.css">
+</head>
+
+<body class="dashboard-body">
+
+<nav class="navbar">
+    <h2>VISION PATH</h2>
+
+    <div class="nav-right">
+        <span id="navUsername">User</span>
+        <button onclick="logoutUser()">Logout</button>
+    </div>
+</nav>
+
+<div class="dashboard-container">
+
+    <div class="welcome-card">
+        <h1 id="greetingText">Welcome to Vision Path 👋</h1>
+        <p>
+            Explore future-ready technology domains and discover the career path that matches your interest, skills and mindset.
+        </p>
+    </div>
+
+    <div class="about-card">
+
+    <h2>About Vision Path</h2>
+
+    <p>
+        Vision Path is a secure career guidance platform designed to help CSE students explore different domains and understand which career direction can match their interests and abilities.
+    </p>
+
+    <button onclick="window.location.href='career-questions.html'">
+        Start Domain Assessment
+    </button>
+
+    </div>
+
+    <div class="domain-grid">
+
+        <div class="domain-card">
+            <h3>🔐 Cybersecurity</h3>
+            <p>
+                Learn how to protect systems, networks and data from cyber attacks. This domain includes ethical hacking, SOC monitoring, web security, cryptography and threat detection.
+            </p>
+        </div>
+
+        <div class="domain-card">
+            <h3>💻 Full Stack Development</h3>
+            <p>
+                Build complete web applications using frontend, backend and database technologies. This domain includes HTML, CSS, JavaScript, Java, Spring Boot, APIs and MySQL.
+            </p>
+        </div>
+
+        <div class="domain-card">
+            <h3>⚛ Quantum Computing</h3>
+            <p>
+                Explore next-generation computing based on quantum mechanics. This domain includes qubits, superposition, quantum algorithms and future computing technologies.
+            </p>
+        </div>
+
+        <div class="domain-card">
+            <h3>🤖 Intelligence System</h3>
+            <p>
+                Create smart systems that can analyze, learn and make decisions. This domain includes artificial intelligence, machine learning, automation and intelligent applications.
+            </p>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="career-script.js"></script>
+</body>
+</html>

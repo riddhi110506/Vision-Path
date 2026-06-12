@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vision Path - Result</title>
+    <link rel="stylesheet" href="career-style.css">
+</head>
+
+<body class="dashboard-body">
+
+<nav class="navbar">
+    <h2>VISION PATH</h2>
+
+    <div class="nav-right">
+        <button onclick="window.location.href='career-dashboard.html'">
+            Dashboard
+        </button>
+    </div>
+</nav>
+
+<div class="dashboard-container">
+
+    <div class="result-card">
+
+        <div class="result-badge">🎯 Recommended Domain</div>
+
+        <h1 id="resultTitle">Your Career Match</h1>
+
+        <p id="resultDescription">
+            Your personalized domain recommendation will appear here.
+        </p>
+
+        <div class="result-highlight">
+            <h3>Why this domain suits you</h3>
+            <p id="resultReason"></p>
+        </div>
+
+        <div class="result-actions">
+            <button onclick="window.location.href='career-roadmap.html'">
+                View Learning Roadmap
+            </button>
+
+            <button class="secondary-btn" onclick="window.location.href='career-questions.html'">
+                Retake Assessment
+            </button>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    const result = localStorage.getItem("domainResult") || "";
+
+    const resultTitle = document.getElementById("resultTitle");
+    const resultDescription = document.getElementById("resultDescription");
+    const resultReason = document.getElementById("resultReason");
+
+    if (result.includes("Cybersecurity")) {
+        resultTitle.innerText = "🔐 Cybersecurity";
+        resultDescription.innerText = "You are best suited for Cybersecurity.";
+        resultReason.innerText = "You show interest in security, networking, system protection and analytical problem-solving.";
+    }
+
+    else if (result.includes("Full Stack")) {
+        resultTitle.innerText = "💻 Full Stack Development";
+        resultDescription.innerText = "You are best suited for Full Stack Development.";
+        resultReason.innerText = "You enjoy building applications, solving real-world problems and understanding how software works.";
+    }
+
+    else if (result.includes("Quantum")) {
+        resultTitle.innerText = "⚛ Quantum Computing";
+        resultDescription.innerText = "You are best suited for Quantum Computing.";
+        resultReason.innerText = "You enjoy mathematics, research, logic and future computing technologies.";
+    }
+
+    else if (result.includes("Intelligence")) {
+        resultTitle.innerText = "🤖 Intelligence System";
+        resultDescription.innerText = "You are best suited for Intelligence System.";
+        resultReason.innerText = "You are interested in AI, automation, data and smart decision-making systems.";
+    }
+
+    else {
+        resultTitle.innerText = "No Result Found";
+        resultDescription.innerText = "Please complete the domain assessment first.";
+        resultReason.innerText = "Go back and answer the questions to get your recommendation.";
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="career-style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>Admin Dashboard</h1>
+
+    <button onclick="viewUsers()">View Users</button>
+    <button onclick="viewLogs()">View Login Logs</button>
+
+    <input type="text" id="unlockUsername" placeholder="Enter username to unlock">
+    <button onclick="unlockUser()">Unlock Account</button>
+
+    <pre id="adminResult"></pre>
+
+    <button onclick="logoutUser()">Logout</button>
+</div>
+
+<script src="career-script.js"></script>
+</body>
+</html>
