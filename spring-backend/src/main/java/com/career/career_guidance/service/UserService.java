@@ -32,30 +32,32 @@ public class UserService {
 
     public User registerUser(User user) {
 
-        User existingUser = userRepository.findByUsername(user.getUsername());
-
-        if (existingUser != null) {
-            throw new RuntimeException("Username already registered");
-        }
-
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        if (user.getRole() == null || user.getRole().isEmpty()) {
-            user.setRole("USER");
-        }
-
-        user.setFailedAttempts(0);
-        user.setAccountLocked(false);
-
-        User savedUser = userRepository.save(user);
-
-        emailService.sendWelcomeEmail(
-                savedUser.getEmail(),
-                savedUser.getUsername()
-        );
-
-        return savedUser;
+    if (userRepository.existsByEmail(user.getEmail())) {
+        throw new RuntimeException("Email already registered");
     }
+
+    if (userRepository.existsByUsername(user.getUsername())) {
+        throw new RuntimeException("Username already exists");
+    }
+
+    user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+    if (user.getRole() == null || user.getRole().isEmpty()) {
+        user.setRole("USER");
+    }
+
+    user.setFailedAttempts(0);
+    user.setAccountLocked(false);
+
+    User savedUser = userRepository.save(user);
+
+    emailService.sendWelcomeEmail(
+            savedUser.getEmail(),
+            savedUser.getUsername()
+    );
+
+    return savedUser;
+}
 
     public String loginUser(User user) {
 

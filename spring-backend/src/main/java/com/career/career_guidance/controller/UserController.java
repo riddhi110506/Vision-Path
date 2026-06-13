@@ -5,6 +5,7 @@ import com.career.career_guidance.security.JwtUtil;
 import com.career.career_guidance.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,9 +27,15 @@ public class UserController {
     private JwtUtil jwtUtil;
 
     @PostMapping("/register")
-    public User registerUser(@RequestBody User user) {
-        return userService.registerUser(user);
+public ResponseEntity<String> registerUser(@RequestBody User user) {
+
+    try {
+        userService.registerUser(user);
+        return ResponseEntity.ok("Registration Successful");
+    } catch (RuntimeException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
+}
 
     @PostMapping("/login")
     public String loginUser(@RequestBody User user) {
