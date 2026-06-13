@@ -107,3 +107,8 @@ public String forgotPassword(@RequestBody User user) {
     return userService.sendResetPasswordEmail(user.getEmail());
 }
 }
+
+@GetMapping("/verify-email")
+public String verifyEmail(@RequestParam String token) {
+    return userService.verifyEmail(token);
+}

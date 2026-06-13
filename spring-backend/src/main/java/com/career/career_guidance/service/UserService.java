@@ -14,23 +14,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class UserService {
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private LoginLogRepository loginLogRepository;
-
-    @Autowired
-    private JwtUtil jwtUtil;
-
-    @Autowired
-    private EmailService emailService;
-
-    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-    public User registerUser(User user) {
+public User registerUser(User user) {
 
     if (userRepository.existsByEmail(user.getEmail())) {
         throw new RuntimeException("Email already registered");
@@ -48,17 +32,21 @@ public class UserService {
 
     user.setFailedAttempts(0);
     user.setAccountLocked(false);
+    user.setEmailVerified(false);
+
+    String token = java.util.UUID.randomUUID().toString();
+    user.setVerificationToken(token);
 
     User savedUser = userRepository.save(user);
 
-    emailService.sendWelcomeEmail(
+    emailService.sendVerificationEmail(
             savedUser.getEmail(),
-            savedUser.getUsername()
+            savedUser.getUsername(),
+            token
     );
 
     return savedUser;
 }
-
     public String loginUser(User user) {
 
         User existingUser = userRepository.findByUsername(user.getUsername());
@@ -70,6 +58,10 @@ public class UserService {
 
             return "User not found";
         }
+
+        if (!existingUser.isEmailVerified()) {
+    return "Please verify your email before login";
+}
 
         if (existingUser.isAccountLocked()) {
             loginLogRepository.save(
@@ -171,4 +163,20 @@ public class UserService {
 
         return "Password reset email sent successfully.";
     }
+}
+
+public String verifyEmail(String token) {
+
+    User user = userRepository.findByVerificationToken(token);
+
+    if (user == null) {
+        return "Invalid verification link";
+    }
+
+    user.setEmailVerified(true);
+    user.setVerificationToken(null);
+
+    userRepository.save(user);
+
+    return "Email verified successfully. You can now login.";
 }

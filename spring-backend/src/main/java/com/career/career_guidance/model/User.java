@@ -16,6 +16,8 @@ public class User {
     private String interest;
     private String skill;
     private String role;
+    private boolean emailVerified;
+    private String verificationToken;
 
     private int failedAttempts = 0;
     private boolean accountLocked = false;
@@ -103,3 +105,5 @@ public class User {
         this.accountLocked = accountLocked;
     }
 }
+
+

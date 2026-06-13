@@ -14,20 +14,23 @@ public class EmailService {
     @Value("${brevo.sender.email}")
     private String senderEmail;
 
-    @Value("${frontend.url}")
-    private String frontendUrl;
+    @Value("${backend.url}")
+    private String backendUrl;
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public void sendWelcomeEmail(String toEmail, String username) {
+    public void sendVerificationEmail(String toEmail, String username, String token) {
 
-        String subject = "Welcome to Vision Path";
+        String verifyLink = backendUrl + "/api/verify-email?token=" + token;
+
+        String subject = "Verify Your Vision Path Email";
 
         String content =
                 "Hello " + username + ",<br><br>" +
                 "Welcome to Vision Path!<br><br>" +
-                "Your account has been created successfully.<br>" +
-                "You can now login and explore your career roadmap.<br><br>" +
+                "Please verify your email by clicking below:<br><br>" +
+                "<a href='" + verifyLink + "'>Verify Email</a><br><br>" +
+                "After verification, you can login to Vision Path.<br><br>" +
                 "Thank You,<br>Vision Path Team";
 
         sendEmail(toEmail, subject, content);
@@ -35,15 +38,12 @@ public class EmailService {
 
     public void sendResetPasswordEmail(String toEmail) {
 
-        String resetLink = frontendUrl + "/career-reset-password.html";
-
         String subject = "Vision Path - Password Reset";
 
         String content =
                 "Hello,<br><br>" +
                 "We received a request to reset your Vision Path password.<br><br>" +
-                "Click this link to reset your password:<br>" +
-                "<a href='" + resetLink + "'>Reset Password</a><br><br>" +
+                "Please open the Forgot Password page and set a new password using this Email ID.<br><br>" +
                 "If you did not request this, please ignore this email.<br><br>" +
                 "Thank You,<br>Vision Path Team";
 
@@ -80,6 +80,7 @@ public class EmailService {
         headers.set("api-key", brevoApiKey);
 
         HttpEntity<String> request = new HttpEntity<>(body, headers);
+
         restTemplate.postForEntity(url, request, String.class);
     }
 }
