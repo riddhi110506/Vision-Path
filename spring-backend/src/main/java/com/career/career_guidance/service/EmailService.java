@@ -42,7 +42,7 @@ public class EmailService {
     String resetLink =
             "https://guileless-squirrel-3ca091.netlify.app/career-reset-password.html";
 
-    String subject = "Vision Path Password Reset " + System.currentTimeMillis();
+    String subject = "Vision Path - Password Reset";
 
     String content =
             "Hello,<br><br>" +
