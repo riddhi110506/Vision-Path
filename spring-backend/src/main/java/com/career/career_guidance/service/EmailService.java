@@ -19,24 +19,25 @@ public class EmailService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public void sendVerificationEmail(String toEmail, String username, String token) {
+   public void sendVerificationEmail(String toEmail, String username, String token) {
 
-        String verifyLink = backendUrl + "/api/verify-email?token=" + token;
+    String verifyLink = backendUrl + "/api/verify-email?token=" + token;
 
-        String subject = "Verify Your Vision Path Email";
+    String subject = "Vision Path Email Verification - " + username;
 
-        String content =
-                "Hello " + username + ",<br><br>" +
-                "Welcome to Vision Path!<br><br>" +
-                "Please verify your email by clicking below:<br><br>" +
-                "<a href='" + verifyLink + "'>Verify Email</a><br><br>" +
-                "After verification, you can login to Vision Path.<br><br>" +
-                "Thank You,<br>Vision Path Team";
+    String content =
+            "Hello " + username + ",<br><br>" +
+            "Welcome to Vision Path!<br><br>" +
+            "Please verify your email by clicking below:<br><br>" +
+            "<a href='" + verifyLink + "'>Verify Email</a><br><br>" +
+            "After verification, you can login to Vision Path.<br><br>" +
+            "Thank You,<br>" +
+            "Vision Path Team";
 
-        sendEmail(toEmail, subject, content);
-    }
+    sendEmail(toEmail, subject, content);
+}
 
-    public void sendResetPasswordEmail(String toEmail) {
+   public void sendResetPasswordEmail(String toEmail) {
 
     String resetLink =
             "https://guileless-squirrel-3ca091.netlify.app/career-reset-password.html";
