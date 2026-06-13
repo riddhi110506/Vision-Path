@@ -8,7 +8,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     private String email;
     private String username;
@@ -16,23 +16,23 @@ public class User {
     private String interest;
     private String skill;
     private String role;
+
+    private int failedAttempts;
+    private boolean accountLocked;
+
     private boolean emailVerified;
     private String verificationToken;
-
-    private int failedAttempts = 0;
-    private boolean accountLocked = false;
 
     public User() {
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
-
 
     public String getEmail() {
         return email;
@@ -41,6 +41,9 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
+
+
+
 
 
     public String getUsername() {
@@ -52,6 +55,9 @@ public class User {
     }
 
 
+
+
+
     public String getPassword() {
         return password;
     }
@@ -59,6 +65,9 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+
+
 
 
     public String getInterest() {
@@ -70,6 +79,9 @@ public class User {
     }
 
 
+
+
+
     public String getSkill() {
         return skill;
     }
@@ -77,6 +89,9 @@ public class User {
     public void setSkill(String skill) {
         this.skill = skill;
     }
+
+
+
 
 
     public String getRole() {
@@ -88,6 +103,9 @@ public class User {
     }
 
 
+
+
+
     public int getFailedAttempts() {
         return failedAttempts;
     }
@@ -97,12 +115,39 @@ public class User {
     }
 
 
+
+
+
     public boolean isAccountLocked() {
         return accountLocked;
     }
 
     public void setAccountLocked(boolean accountLocked) {
         this.accountLocked = accountLocked;
+    }
+
+
+
+
+
+    public boolean isEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
+    }
+
+
+
+
+
+    public String getVerificationToken() {
+        return verificationToken;
+    }
+
+    public void setVerificationToken(String verificationToken) {
+        this.verificationToken = verificationToken;
     }
 }
 

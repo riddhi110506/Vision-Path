@@ -6,14 +6,7 @@ import com.career.career_guidance.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -27,19 +20,36 @@ public class UserController {
     private JwtUtil jwtUtil;
 
     @PostMapping("/register")
-public ResponseEntity<String> registerUser(@RequestBody User user) {
-
-    try {
-        userService.registerUser(user);
-        return ResponseEntity.ok("Registration Successful");
-    } catch (RuntimeException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<String> registerUser(@RequestBody User user) {
+        try {
+            userService.registerUser(user);
+            return ResponseEntity.ok("Registration Successful. Please verify your email.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
-}
+
+    @GetMapping("/verify-email")
+    public String verifyEmail(@RequestParam String token) {
+        return userService.verifyEmail(token);
+    }
 
     @PostMapping("/login")
     public String loginUser(@RequestBody User user) {
         return userService.loginUser(user);
+    }
+
+    @PostMapping("/forgot-password")
+    public String forgotPassword(@RequestBody User user) {
+        return userService.sendResetPasswordEmail(user.getEmail());
+    }
+
+    @PostMapping("/reset-password")
+    public String resetPassword(@RequestBody User user) {
+        return userService.resetPassword(
+                user.getEmail(),
+                user.getPassword()
+        );
     }
 
     @GetMapping("/logs")
@@ -97,18 +107,4 @@ public ResponseEntity<String> registerUser(@RequestBody User user) {
             return "Access Denied: Admins only";
         }
     }
-    @PostMapping("/reset-password")
-public String resetPassword(@RequestBody User user) {
-    return userService.resetPassword(user.getEmail(), user.getPassword());
-}
-
-@PostMapping("/forgot-password")
-public String forgotPassword(@RequestBody User user) {
-    return userService.sendResetPasswordEmail(user.getEmail());
-}
-}
-
-@GetMapping("/verify-email")
-public String verifyEmail(@RequestParam String token) {
-    return userService.verifyEmail(token);
 }

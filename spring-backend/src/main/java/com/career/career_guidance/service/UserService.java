@@ -12,41 +12,59 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
-public User registerUser(User user) {
+public class UserService {
 
-    if (userRepository.existsByEmail(user.getEmail())) {
-        throw new RuntimeException("Email already registered");
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private LoginLogRepository loginLogRepository;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private EmailService emailService;
+
+    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    public User registerUser(User user) {
+
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new RuntimeException("Email already registered");
+        }
+
+        if (userRepository.existsByUsername(user.getUsername())) {
+            throw new RuntimeException("Username already exists");
+        }
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        if (user.getRole() == null || user.getRole().isEmpty()) {
+            user.setRole("USER");
+        }
+
+        user.setFailedAttempts(0);
+        user.setAccountLocked(false);
+        user.setEmailVerified(false);
+
+        String token = UUID.randomUUID().toString();
+        user.setVerificationToken(token);
+
+        User savedUser = userRepository.save(user);
+
+        emailService.sendVerificationEmail(
+                savedUser.getEmail(),
+                savedUser.getUsername(),
+                token
+        );
+
+        return savedUser;
     }
 
-    if (userRepository.existsByUsername(user.getUsername())) {
-        throw new RuntimeException("Username already exists");
-    }
-
-    user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-    if (user.getRole() == null || user.getRole().isEmpty()) {
-        user.setRole("USER");
-    }
-
-    user.setFailedAttempts(0);
-    user.setAccountLocked(false);
-    user.setEmailVerified(false);
-
-    String token = java.util.UUID.randomUUID().toString();
-    user.setVerificationToken(token);
-
-    User savedUser = userRepository.save(user);
-
-    emailService.sendVerificationEmail(
-            savedUser.getEmail(),
-            savedUser.getUsername(),
-            token
-    );
-
-    return savedUser;
-}
     public String loginUser(User user) {
 
         User existingUser = userRepository.findByUsername(user.getUsername());
@@ -60,8 +78,8 @@ public User registerUser(User user) {
         }
 
         if (!existingUser.isEmailVerified()) {
-    return "Please verify your email before login";
-}
+            return "Please verify your email before login";
+        }
 
         if (existingUser.isAccountLocked()) {
             loginLogRepository.save(
@@ -110,6 +128,52 @@ public User registerUser(User user) {
         }
     }
 
+    public String verifyEmail(String token) {
+
+        User user = userRepository.findByVerificationToken(token);
+
+        if (user == null) {
+            return "Invalid verification link";
+        }
+
+        user.setEmailVerified(true);
+        user.setVerificationToken(null);
+
+        userRepository.save(user);
+
+        return "Email verified successfully. You can now login.";
+    }
+
+    public String sendResetPasswordEmail(String email) {
+
+        User user = userRepository.findByEmail(email);
+
+        if (user == null) {
+            return "Email ID not found";
+        }
+
+        emailService.sendResetPasswordEmail(email);
+
+        return "Password reset email sent successfully.";
+    }
+
+    public String resetPassword(String email, String newPassword) {
+
+        User user = userRepository.findByEmail(email);
+
+        if (user == null) {
+            return "Email ID not found";
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setFailedAttempts(0);
+        user.setAccountLocked(false);
+
+        userRepository.save(user);
+
+        return "Password reset successfully. Please login.";
+    }
+
     public List<LoginLog> getAllLogs() {
         return loginLogRepository.findAll();
     }
@@ -133,50 +197,4 @@ public User registerUser(User user) {
 
         return "Account unlocked successfully";
     }
-
-    public String resetPassword(String email, String newPassword) {
-
-        User user = userRepository.findByEmail(email);
-
-        if (user == null) {
-            return "Email ID not found";
-        }
-
-        user.setPassword(passwordEncoder.encode(newPassword));
-        user.setFailedAttempts(0);
-        user.setAccountLocked(false);
-
-        userRepository.save(user);
-
-        return "Password reset successfully. Please login.";
-    }
-
-    public String sendResetPasswordEmail(String email) {
-
-        User user = userRepository.findByEmail(email);
-
-        if (user == null) {
-            return "Email ID not found";
-        }
-
-        emailService.sendResetPasswordEmail(email);
-
-        return "Password reset email sent successfully.";
-    }
-}
-
-public String verifyEmail(String token) {
-
-    User user = userRepository.findByVerificationToken(token);
-
-    if (user == null) {
-        return "Invalid verification link";
-    }
-
-    user.setEmailVerified(true);
-    user.setVerificationToken(null);
-
-    userRepository.save(user);
-
-    return "Email verified successfully. You can now login.";
 }
