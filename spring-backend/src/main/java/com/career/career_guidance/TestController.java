@@ -6,9 +6,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TestController {
 
-    @GetMapping("/test")
-    public String testApi() {
-        return "Spring Boot API is working";
+    @GetMapping("/")
+    public String home() {
+        return "Vision Path Backend is Running Successfully";
+    }
+
+    @GetMapping("/api/test")
+    public String test() {
+        return "API is working";
     }
 }
 
