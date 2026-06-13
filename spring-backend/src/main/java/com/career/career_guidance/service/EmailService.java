@@ -1,50 +1,85 @@
 package com.career.career_guidance.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class EmailService {
 
-    @Autowired
-    private JavaMailSender mailSender;
+    @Value("${brevo.api.key}")
+    private String brevoApiKey;
+
+    @Value("${brevo.sender.email}")
+    private String senderEmail;
+
+    @Value("${frontend.url}")
+    private String frontendUrl;
+
+    private final RestTemplate restTemplate = new RestTemplate();
 
     public void sendWelcomeEmail(String toEmail, String username) {
 
-        SimpleMailMessage message = new SimpleMailMessage();
+        String subject = "Welcome to Vision Path";
 
-        message.setTo(toEmail);
-        message.setSubject("Welcome to Vision Path");
+        String content =
+                "Hello " + username + ",<br><br>" +
+                "Welcome to Vision Path!<br><br>" +
+                "Your account has been created successfully.<br>" +
+                "You can now login and explore your career roadmap.<br><br>" +
+                "Thank You,<br>Vision Path Team";
 
-        message.setText(
-                "Hello " + username + ",\n\n" +
-                "Welcome to Vision Path!\n\n" +
-                "Your account has been created successfully.\n" +
-                "You can now login and explore your career roadmap.\n\n" +
-                "Thank You,\nVision Path Team"
-        );
-
-        mailSender.send(message);
+        sendEmail(toEmail, subject, content);
     }
 
-   public void sendResetPasswordEmail(String toEmail) {
+    public void sendResetPasswordEmail(String toEmail) {
 
-    SimpleMailMessage message = new SimpleMailMessage();
+        String resetLink = frontendUrl + "/career-reset-password.html";
 
-    message.setTo(toEmail);
-    message.setSubject("Vision Path - Password Reset");
+        String subject = "Vision Path - Password Reset";
 
-    message.setText(
-            "Hello,\n\n" +
-            "We received a request to reset your Vision Path password.\n\n" +
-            "Click this link to reset your password:\n" +
-            "http://127.0.0.1:5500/career-reset-password.html\n\n" +
-            "If you did not request this, please ignore this email.\n\n" +
-            "Thank You,\nVision Path Team"
-    );
+        String content =
+                "Hello,<br><br>" +
+                "We received a request to reset your Vision Path password.<br><br>" +
+                "Click this link to reset your password:<br>" +
+                "<a href='" + resetLink + "'>Reset Password</a><br><br>" +
+                "If you did not request this, please ignore this email.<br><br>" +
+                "Thank You,<br>Vision Path Team";
 
-    mailSender.send(message);
-}
+        sendEmail(toEmail, subject, content);
+    }
+
+    private void sendEmail(String toEmail, String subject, String htmlContent) {
+
+        String url = "https://api.brevo.com/v3/smtp/email";
+
+        String body = """
+                {
+                  "sender": {
+                    "name": "Vision Path",
+                    "email": "%s"
+                  },
+                  "to": [
+                    {
+                      "email": "%s"
+                    }
+                  ],
+                  "subject": "%s",
+                  "htmlContent": "%s"
+                }
+                """.formatted(
+                senderEmail,
+                toEmail,
+                subject,
+                htmlContent.replace("\"", "\\\"")
+        );
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("api-key", brevoApiKey);
+
+        HttpEntity<String> request = new HttpEntity<>(body, headers);
+        restTemplate.postForEntity(url, request, String.class);
+    }
 }
