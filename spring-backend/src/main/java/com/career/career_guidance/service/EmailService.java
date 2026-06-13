@@ -38,21 +38,22 @@ public class EmailService {
 
     public void sendResetPasswordEmail(String toEmail) {
 
-    String resetLink = "https://guileless-squirrel-3ca091.netlify.app/career-reset-password.html";
+    String resetLink =
+            "https://guileless-squirrel-3ca091.netlify.app/career-reset-password.html";
 
     String subject = "Vision Path - Password Reset";
 
     String content =
             "Hello,<br><br>" +
             "We received a request to reset your Vision Path password.<br><br>" +
-            "Click this link to reset your password:<br><br>" +
+            "Click this link to reset your password:<br>" +
             "<a href='" + resetLink + "'>Reset Password</a><br><br>" +
-            "If you did not request this,please ignore this email." +
-            "Thank You,<br>Vision Path Team";
+            "If you did not request this, please ignore this email.<br><br>" +
+            "Thank You,<br>" +
+            "Vision Path Team";
 
     sendEmail(toEmail, subject, content);
 }
-
     private void sendEmail(String toEmail, String subject, String htmlContent) {
 
         String url = "https://api.brevo.com/v3/smtp/email";
