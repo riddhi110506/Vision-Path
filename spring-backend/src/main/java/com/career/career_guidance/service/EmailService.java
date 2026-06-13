@@ -47,8 +47,7 @@ public class EmailService {
             "We received a request to reset your Vision Path password.<br><br>" +
             "Click this link to reset your password:<br><br>" +
             "<a href='" + resetLink + "'>Reset Password</a><br><br>" +
-            "If the button does not work, copy this link:<br>" +
-            resetLink + "<br><br>" +
+            "If you did not request this,please ignore this email." +
             "Thank You,<br>Vision Path Team";
 
     sendEmail(toEmail, subject, content);
