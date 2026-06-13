@@ -38,17 +38,21 @@ public class EmailService {
 
     public void sendResetPasswordEmail(String toEmail) {
 
-        String subject = "Vision Path - Password Reset";
+    String resetLink = "https://guileless-squirrel-3ca091.netlify.app/career-reset-password.html";
 
-        String content =
-                "Hello,<br><br>" +
-                "We received a request to reset your Vision Path password.<br><br>" +
-                "Please open the Forgot Password page and set a new password using this Email ID.<br><br>" +
-                "If you did not request this, please ignore this email.<br><br>" +
-                "Thank You,<br>Vision Path Team";
+    String subject = "Vision Path - Password Reset";
 
-        sendEmail(toEmail, subject, content);
-    }
+    String content =
+            "Hello,<br><br>" +
+            "We received a request to reset your Vision Path password.<br><br>" +
+            "Click this link to reset your password:<br><br>" +
+            "<a href='" + resetLink + "'>Reset Password</a><br><br>" +
+            "If the button does not work, copy this link:<br>" +
+            resetLink + "<br><br>" +
+            "Thank You,<br>Vision Path Team";
+
+    sendEmail(toEmail, subject, content);
+}
 
     private void sendEmail(String toEmail, String subject, String htmlContent) {
 
